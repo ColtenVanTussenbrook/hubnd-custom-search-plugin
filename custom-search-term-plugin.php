@@ -12,6 +12,7 @@ License: GPLv2 or later
 // fire up the plugin
 require_once dirname( __FILE__ ) .'/custom-search.php';
 require_once dirname( __FILE__ ) .'/search-urls-custom-post-type.php';
+require_once dirname(__FILE__) . '/documentation.php';
 
 function custom_search_css() {
     $css_path = plugin_dir_url( __FILE__ ) . '/css/style.css';

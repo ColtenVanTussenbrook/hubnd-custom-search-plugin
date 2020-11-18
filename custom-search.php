@@ -76,31 +76,27 @@ class CustomSearch {
 
     public function display_search_results($search_term) {
         $url_data = $this->query_urls();
-        $urls = [];
-        $space_format = '';
         $temp_search_term = $search_term;
         $results_str = '';
-        
-        // loop through and replace %%search-term%% with appropriate search
-        foreach($url_data as $url) {
-            $urls_inner = [];
-            $anchor_text = $url[1];
-            $space_format = $url[2];         
+        $category_list = get_terms(array('taxonomy' => 'search_topic_category'));
 
-            $temp_search_term = $space_format === 'plus-sign' ? urlencode($search_term) : rawurlencode($search_term);
-
-            $urls_inner[] = str_replace($this->search_placeholder, $temp_search_term, $url[0]);
-            $urls_inner[] = $anchor_text;
-            $urls[] = $urls_inner;
-        }
-
-        //$urls_inner[0] = link
-        //$urls_inner[1] = anchor text
+        // Sort category list by description
+        usort($category_list, function($a,$b) {
+            return strcmp($a->description, $b->description);
+        });
 
         $results_str = '<div class="hubnd-custom-search-results">';
 
-        foreach($urls as $link_data) {
-            $results_str .= '<p class="search-result-link"><a href="' . $link_data[0] . '" target="_blank">' . $link_data[1] . '</a></p>';
+        foreach($category_list as $cat) {            
+            $results_str .= '<h4 class="hubnd-custom-search-results-headings">' . $cat->name . '</h4>';
+
+            foreach($url_data as $url) {
+                if (in_array($cat->slug, $url[3])) {
+                    $temp_search_term = $url[2] === 'plus-sign' ? urlencode($search_term) : rawurlencode($search_term);
+                    $replaced_url = str_replace($this->search_placeholder, $temp_search_term, $url[0]);
+                    $results_str .= '<p class="search-result-link"><a href="' . $replaced_url . '" target="_blank">' . $url[1] . '</a></p>';
+                }
+            }
         }
 
         $results_str .= '</div>';
@@ -121,7 +117,15 @@ class CustomSearch {
             $url_meta_arr = [];
             $content = $url->post_content;
             $title = $url->post_title;
+            $categories = get_the_terms($url->ID, 'search_topic_category');
+            $category_arr = [];
             $meta = get_post_meta($url->ID, 'space_format_dropdown', true);
+
+            foreach($categories as $category) {
+                if ($category->slug) {
+                    array_push($category_arr, $category->slug);
+                } 
+            }
 
             if (!empty($content)) {
                 if (strpos($content, $this->search_placeholder) !== false) {
@@ -142,8 +146,9 @@ class CustomSearch {
                 $url_meta_arr[] = $meta;
             } else {
                 $url_meta_arr[] = '';
-            } 
+            }
 
+            $url_meta_arr[] = $category_arr; // will be an empty array anyway if not set
             $urls[] = $url_meta_arr;
         }
 
