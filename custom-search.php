@@ -87,8 +87,9 @@ class CustomSearch {
 
         $results_str = '<div class="hubnd-custom-search-results">';
 
-        foreach($category_list as $cat) {            
-            $results_str .= '<h4 class="hubnd-custom-search-results-headings">' . $cat->name . '</h4>';
+        foreach($category_list as $cat) {          
+            $results_str .= '<div class="hubnd-custom-search-results-category">';  
+            $results_str .= '<h4 class="hubnd-custom-search-results-heading">' . $cat->name . '</h4>';
 
             foreach($url_data as $url) {
                 if (in_array($cat->slug, $url[3])) {
@@ -97,6 +98,8 @@ class CustomSearch {
                     $results_str .= '<p class="search-result-link"><a href="' . $replaced_url . '" target="_blank">' . $url[1] . '</a></p>';
                 }
             }
+
+            $results_str .= '</div>';
         }
 
         $results_str .= '</div>';
