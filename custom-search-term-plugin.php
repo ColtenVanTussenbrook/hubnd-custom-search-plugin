@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Custom Search Term Plugin
-Plugin URI: N/A
+Plugin URI: https://coltenv.com
 Description: Plugin to create a custom search that places user search term directly into another site's search query
 Version: 1.0
 Author: Colten Van Tussenbrook
@@ -18,5 +18,12 @@ function custom_search_css() {
     $css_path = plugin_dir_url( __FILE__ ) . '/css/style.css';
     wp_enqueue_style( 'style.css', $css_path); 
 }
-add_action( 'wp_enqueue_scripts', 'custom_search_css');
+
+function admin_custom_css() {
+    $css_path = plugin_dir_url( __FILE__ ) . '/css/admin-style.css';
+    wp_enqueue_style( 'admin-style.css', $css_path);
+}
+
+add_action( 'wp_enqueue_scripts', 'custom_search_css' );
+add_action( 'admin_enqueue_scripts', 'admin_custom_css' );
  

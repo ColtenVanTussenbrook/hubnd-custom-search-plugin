@@ -1,0 +1,7 @@
+/*****DOCUMENTATION*****/
+#wpbody-content .custom-search-url-documentation {
+    overflow: scroll;
+    max-height: 800px;
+    border: 2px solid #333;
+    padding: 1rem;
+}

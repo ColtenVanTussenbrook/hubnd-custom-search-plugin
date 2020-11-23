@@ -51,7 +51,7 @@ class CustomSearch {
         <div class="hubnd-custom-search-box">
             <form action="<?php the_permalink(); ?> " method="get">
                 <div class="custom-search-box-fields">
-                    <input type="text" name="search-term" placeholder="Search Research Topics" class="custom-search-input" value="<?php echo $this->search_term; ?>">
+                    <input type="text" name="search-term" placeholder="Naturopathic One Search" class="custom-search-input" value="<?php echo $this->search_term; ?>">
                     <input type="hidden" name="submitted" value="1">
                     <input type="submit" class="search-button" value="SEARCH"></input>
                 </div>
@@ -124,12 +124,14 @@ class CustomSearch {
             $category_arr = [];
             $meta = get_post_meta($url->ID, 'space_format_dropdown', true);
 
-            foreach($categories as $category) {
-                if ($category->slug) {
-                    array_push($category_arr, $category->slug);
-                } 
+            if (is_array($categories)) {
+                foreach($categories as $category) {
+                    if ($category->slug) {
+                        array_push($category_arr, $category->slug);
+                    } 
+                }
             }
-
+            
             if (!empty($content)) {
                 if (strpos($content, $this->search_placeholder) !== false) {
                     $content = trim($content);
